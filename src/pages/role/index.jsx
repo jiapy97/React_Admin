@@ -4,12 +4,13 @@ import { reqRoles } from '../../api/index.js'
 import AddForm from './add-form'
 import AuthForm from './auth-form'
 import { reqAddRole, reqUpdateRole } from '../../api/index'
-import memoryUtils from '../../utils/memoryUtils'
 import moment from 'moment'
-import storageUtils from '../../utils/storageUtils.js'
+// import storageUtils from '../../utils/storageUtils.js'
+import {logoutAction} from '../../redux/actions'
+import { connect } from 'react-redux'
 // import { log } from 'util'
 // 这是角色管理路由
-export default class Role extends Component {
+class Role extends Component {
     state = {
         roles: [],      //所有的角色
         selectedRole: [],    //选中的role
@@ -115,13 +116,14 @@ export default class Role extends Component {
         role.menus = menus;
         // role.auth_time = moment().format('YYYY-MM-DD')
         console.log(role.auth_time);
-        role.auth_name = memoryUtils.user.username;
+        role.auth_name = this.props.user.username;
         const result = await reqUpdateRole(role);
 
         if (result.status === 0) {
-            if (role._id === memoryUtils.user.role_id) {
-                memoryUtils.user = {}
-                storageUtils.removeUser()
+            if (role._id === this.props.user.role_id) {
+                // this.props.user = {}
+                // storageUtils.removeUser()
+                this.props.logoutAction()
                 this.props.history.replace('/login');
                 message.success('当前用户的角色权限被修改，请重新登录')
             } else {
@@ -173,3 +175,8 @@ export default class Role extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    {logoutAction}
+)(Role)

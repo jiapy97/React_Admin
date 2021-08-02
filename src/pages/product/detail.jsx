@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Card, List, Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { reqCategory } from '../../api';
+import memoryUtils from '../../utils/memoryUtils';
 // import jp1 from '../login/images/bg.jpg'
 const Item = List.Item;
 // 商品详情页 路由
@@ -12,7 +13,7 @@ export default class ProductDetail extends Component {
     }
 
     async componentDidMount() {
-        const {pCategoryId,categoryId} = this.props.location.state.product;
+        const {pCategoryId,categoryId} = memoryUtils.product;
         if (pCategoryId === '0') {
             const result = await reqCategory(categoryId);
             const cName1 = result.data.name;
@@ -25,8 +26,11 @@ export default class ProductDetail extends Component {
             this.setState({cName1,cName2})
         }
     }
+    componentWillUnmount() {
+        memoryUtils.product = {};
+    }
     render() {
-        const { name, desc, price, detail } = this.props.location.state.product;
+        const { name, desc, price, detail } = memoryUtils.product;
         const {cName1,cName2} = this.state;
         const title = (
             <span>

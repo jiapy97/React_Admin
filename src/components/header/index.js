@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import './index.less'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
+// import memoryUtils from '../../utils/memoryUtils'
+// import storageUtils from '../../utils/storageUtils'
 import { reWeather } from '../../api/index'
 import menuList from '../../config/menuConfig'
-
 import { Modal,Button } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {connect} from 'react-redux'
+import {logoutAction} from '../../redux/actions'
+import { withRouter } from 'react-router-dom'
+import './index.css'
+
 
 const { confirm } = Modal;
 class Header extends Component {
@@ -47,8 +49,9 @@ logout = () => {
         content: '确定要退出吗？',
         onOk: () => {
             // 从内存中删除用户信息
-            storageUtils.removeUser();
-            memoryUtils.user = {};
+            // storageUtils.removeUser();
+            // memoryUtils.user = {};
+            this.props.logoutAction();
             // 跳转到登录
             this.props.history.replace('/login');
         },
@@ -66,8 +69,8 @@ componentWillUnmount () {
 }
 render() {
     // 获取用户名
-    const username = memoryUtils.user.username;
-    const pathname = this.getTitle();
+    const username = this.props.user.username;
+    const pathname = this.props.headTitle;
 
     return (
         <div className='header'>
@@ -89,4 +92,7 @@ render() {
 }
 }
 
-export default withRouter(Header)
+export default connect(
+    state => ({headTitle: state.headTitle,user: state.user}),
+    {logoutAction}
+)(withRouter(Header))

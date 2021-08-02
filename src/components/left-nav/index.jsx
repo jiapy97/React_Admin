@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu } from 'antd';
-
 import './index.less'
 import xdLogo from '../../assets/images/西电logo.jpg'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils.js'
+import {connect} from 'react-redux'
+import {setHeadTitle} from '../../redux/actions.js'
 
 const { SubMenu } = Menu;
 
@@ -13,8 +13,8 @@ class LeftNav extends Component {
     
     hasAuth = (item) => {
         const {key,isPublic} = item;
-        const menus = memoryUtils.user.role.menus;
-        const username = memoryUtils.user.username;
+        const menus = this.props.user.role.menus;
+        const username = this.props.user.username;
 
         if (username === 'admin' || isPublic || menus.indexOf(key) !== -1) {
             return true;
@@ -30,8 +30,12 @@ class LeftNav extends Component {
         return menuList.reduce((pre, item) => {
             if (this.hasAuth(item)) {
                 if (!item.children) {
+                    // 判断item是否是当前对应的item
+                    if (item.key === path || path.indexOf(item.key) === 0) {
+                        this.props.setHeadTitle(item.title)
+                    }
                     pre.push((<Menu.Item key={item.key} icon={item.icon}>
-                        <Link to={item.key}>
+                        <Link to={item.key} onClick={() => this.props.setHeadTitle(item.title)}>
                             {item.title}
                         </Link>
                     </Menu.Item>))
@@ -82,4 +86,7 @@ class LeftNav extends Component {
     }
 }
 
-export default withRouter(LeftNav)
+export default connect(
+    state => ({headTitle: state.headTitle,user: state.user}),
+    {setHeadTitle}
+)(withRouter(LeftNav))
