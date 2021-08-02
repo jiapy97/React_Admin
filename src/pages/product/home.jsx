@@ -6,6 +6,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { reqProducts, reqSearchProducts, reqUpdateStatus } from '../../api/index'
 import { PAGE_SIZE } from '../../utils/constant'
 import './product.less'
+import memoryUtils from '../../utils/memoryUtils';
 // 商品主页子路由
 const Option = Select.Option;
 export default class ProductHome extends Component {
@@ -41,9 +42,9 @@ export default class ProductHome extends Component {
                         <span>
                             <Button
                                 type='primary'
-                                onClick={() => this.updateStatus(_id, status === 1 ? 2:1)}
-                                
-                                >
+                                onClick={() => this.updateStatus(_id, status === 1 ? 2 : 1)}
+
+                            >
                                 {status === 1 ? '下架' : '上架'}
                             </Button>
                             <span>{status === 1 ? '在售' : '已下架'}</span>
@@ -57,16 +58,25 @@ export default class ProductHome extends Component {
                 render: (product) => {
                     return (
                         <span>
-                            <Button type='link' onClick={() => this.props.history.push('/product/detail', { product })}>详情</Button>
-                            <Button type='link' onClick={() => this.props.history.push('/product/addupdate',product)}>修改</Button>
-                        </span>
+                            <Button type='link' onClick={() => this.showDetail(product)}>详情</Button>
+                            <Button type='link' onClick={() => this.showUpdate(product)}>修改</Button>
+                        </span >
                     )
                 }
             },
         ];
     }
-    updateStatus = async (id,status) => {
-        const result = await reqUpdateStatus(id,status);
+
+    showDetail = (product) => {
+        memoryUtils.product = product;
+        this.props.history.push('/product/detail')
+    }
+    showUpdate = (product) => {
+        memoryUtils.product = product;
+        this.props.history.push('/product/addupdate')
+    }
+    updateStatus = async (id, status) => {
+        const result = await reqUpdateStatus(id, status);
         console.log(result);
         if (result.status === 0) {
             this.getProducts(this.pageNum);

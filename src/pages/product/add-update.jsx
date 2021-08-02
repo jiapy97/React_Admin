@@ -5,6 +5,7 @@ import { reCategorys } from '../../api/index'
 import RichTextEditor from './rich-text-editor'
 import PicturesWall from './pictures-wall'
 import {reqAddOrUpdateProduct} from '../../api/index'
+import memoryUtils from '../../utils/memoryUtils';
 // 商品更新和添加的子路由
 
 const { Item } = Form;
@@ -121,9 +122,12 @@ export default class ProductAddUpdate extends Component {
     }
     componentWillMount() {
         // 判断是修改商品详情 还是 添加商品
-        const product = this.props.location.state;
-        this.isUpdate = !!product;
+        const product = memoryUtils.product;
+        this.isUpdate = !!product._id;
         this.product = product || {}
+    }
+    componentWillUnmount() {
+        memoryUtils.product = {};
     }
     render() {
         const { isUpdate, product } = this;

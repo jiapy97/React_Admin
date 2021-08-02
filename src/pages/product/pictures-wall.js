@@ -99,7 +99,7 @@ export default class PicturesWall extends React.Component {
         return (
             <>
                 <Upload
-                    action="/manage/img/upload"
+                    action="api/manage/img/upload"
                     accept='image/*'
                     name='image'
                     listType="picture-card"

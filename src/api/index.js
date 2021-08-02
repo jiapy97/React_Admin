@@ -1,8 +1,9 @@
 import ajax from './ajax';
 import jsonp from 'jsonp';
 import { message } from 'antd'
+const BASE = '/api';
 // 登录
-export const reLogin = (username, password) => ajax('/login', { username, password }, 'POST');
+export const reLogin = (username, password) => ajax(BASE + '/login', { username, password }, 'POST');
 
 // jsonp请求的接口请求函数
 export const reWeather = (cityUnicode) => {
@@ -23,20 +24,20 @@ export const reWeather = (cityUnicode) => {
 }
 
 // 获取一级/二级的分类列表
-export const reCategorys = (parentId) => ajax('/manage/category/list', { parentId })
+export const reCategorys = (parentId) => ajax(BASE + '/manage/category/list', { parentId })
 // 添加分类
-export const reAddCategorys = (categoryName, parentId) => ajax('/manage/category/add', { categoryName, parentId }, 'POST')
+export const reAddCategorys = (categoryName, parentId) => ajax(BASE + '/manage/category/add', { categoryName, parentId }, 'POST')
 // 更新分类
-export const reUpdateCategorys = ({ categoryId, categoryName }) => ajax('/manage/category/update', { categoryId, categoryName }, 'POST')
+export const reUpdateCategorys = ({ categoryId, categoryName }) => ajax(BASE + '/manage/category/update', { categoryId, categoryName }, 'POST')
 
 // 获取商品详情的分类
-export const reqCategory = (categoryId) => ajax('/manage/category/info',{categoryId})
+export const reqCategory = (categoryId) => ajax(BASE + '/manage/category/info',{categoryId})
 
 // 获取商品分页列表
-export const reqProducts = (pageNum, pageSize) => ajax('/manage/product/list', { pageNum, pageSize })
+export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/list', { pageNum, pageSize })
 
 // 根据指定类型 搜索商品
-export const reqSearchProducts = ({ pageNum, pageSize, searchName, searchType }) => ajax('/manage/product/search',
+export const reqSearchProducts = ({ pageNum, pageSize, searchName, searchType }) => ajax(BASE + '/manage/product/search',
     {
         pageNum,
         pageSize,
@@ -45,28 +46,28 @@ export const reqSearchProducts = ({ pageNum, pageSize, searchName, searchType })
 )
 
 // 对商品进行 上架和下架
-export const reqUpdateStatus = (productId,status) => ajax('/manage/product/updateStatus',{productId,status},'POST')
+export const reqUpdateStatus = (productId,status) => ajax(BASE + '/manage/product/updateStatus',{productId,status},'POST')
 
 // 删除图片请求
-export const reqDeleteImg = (name) => ajax('/manage/img/delete',{name},'POST')
+export const reqDeleteImg = (name) => ajax(BASE + '/manage/img/delete',{name},'POST')
 
 // 添加或更新商品
-export const reqAddOrUpdateProduct = (product) => ajax('/manage/product/' + (product._id ? 'update':'add'),product,'POST')
+export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/' + (product._id ? 'update':'add'),product,'POST')
 
 // 获取角色列表
-export const reqRoles = () => ajax('/manage/role/list')
+export const reqRoles = () => ajax(BASE + '/manage/role/list')
 
 // 添加角色
-export const reqAddRole = (roleName) => ajax('/manage/role/add',{roleName},'POST')
+export const reqAddRole = (roleName) => ajax(BASE + '/manage/role/add',{roleName},'POST')
 
 // 更新角色
-export const reqUpdateRole = (role) => ajax('/manage/role/update',role,'POST')
+export const reqUpdateRole = (role) => ajax(BASE + '/manage/role/update',role,'POST')
 
 // 获取所有用户的列表
-export const reqUsers = () => ajax('/manage/user/list')
+export const reqUsers = () => ajax(BASE + '/manage/user/list')
 
 // 删除某一个用户
-export const reqDeleteUser = (userId) => ajax('/manage/user/delete',{userId},'POST')
+export const reqDeleteUser = (userId) => ajax(BASE + '/manage/user/delete',{userId},'POST')
 
 // 添加用户
-export const reqAddOrUpdateUser = (user) => ajax('/manage/user/'+(user._id ? 'update' : 'add'),user,'POST')
+export const reqAddOrUpdateUser = (user) => ajax(BASE + '/manage/user/'+(user._id ? 'update' : 'add'),user,'POST')

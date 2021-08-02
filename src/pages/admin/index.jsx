@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Redirect,Switch,Route } from 'react-router-dom'
 import { Layout } from 'antd';
-import memoryUtils from '../../utils/memoryUtils.js'
+import {connect}  from 'react-redux'
 import Header from '../../components/header'
 import LeftNav from '../../components/left-nav'
 import Category from '../category'
@@ -13,12 +12,16 @@ import Product from '../product'
 import Role from '../role'
 import User from '../user'
 import Charts from '../charts'
+import NotFound from '../not-found'
+import { Redirect,Switch,Route } from 'react-router-dom'
+
 
 
 const { Footer, Sider, Content } = Layout;
-export default class Admin extends Component {
+class Admin extends Component {
     render() {
-        const user = memoryUtils.user;
+        // const user = memoryUtils.user;
+        const user = this.props.user;
         // 如果没有获取到用户id则直接返回登录页面
         if (!user._id) {
             return <Redirect to='/login' />
@@ -33,6 +36,7 @@ export default class Admin extends Component {
                     <Header>Header</Header>
                     <Content style={{margin: 20, backgroundColor: '#fff'}}>
                         <Switch>
+                            <Redirect exact={true} from = '/' to={'/home'}/>
                             <Route path='/home' component={Home}/>
                             <Route path='/category' component={Category}/>
                             <Route path='/charts/bar' component={Bar}/>
@@ -42,7 +46,7 @@ export default class Admin extends Component {
                             <Route path='/role' component={Role}/>
                             <Route path='/user' component={User}/>
                             <Route path='/charts' component={Charts}/>
-                            <Redirect to={'/home'}/>
+                            <Route component={NotFound} />
                         </Switch>
                     </Content>
                     <Footer style={{textAlign: 'center',color: '#ccc'}}>推荐使用谷歌浏览器，以获取最佳用户体验！</Footer>
@@ -52,3 +56,8 @@ export default class Admin extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    {}
+)(Admin)

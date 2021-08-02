@@ -1,37 +1,28 @@
 import React, { Component } from 'react'
-import { Form, Input, Button,message } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './index.less'
-import { reLogin } from '../../api'
 import logo from './images/logo.png'
-import memoryUtils from '../../utils/memoryUtils';
-import storageUtils  from '../../utils/storageUtils.js'
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-export default class Login extends Component {
+import {connect} from 'react-redux'
+import {loginAction} from '../../redux/actions'
+
+
+class Login extends Component {
     onFinish = async (values) => {
         const { username, password } = values;
-        const result = await reLogin(username, password);
-        if (result.status === 0) {
-            message.success("登录成功");
-            // 登录成功的时候，读取用户数据并放在内存中
-            const user = result.data;
-            console.log(user);
-            memoryUtils.user = user;
-            storageUtils.saveUser(user);
-
-            this.props.history.replace('/');
-        } else {
-            message.error("登录出错:"+result.msg)
-        }
+        this.props.loginAction(username,password)
 
     };
     render() {
         // 一上来，先判断使用户是否已经登录，如果用户已经登录，则跳转到管理界面，没有的话则让用户登录
         console.log("执行了");
-        const user = memoryUtils.user;
+        const user = this.props.user;
         if (user._id) {
-            return <Redirect to='/'/>
+            return <Redirect to='/home'/>
         }
+        const errorMsg = this.props.user.errorMsg;
+        console.log('111',errorMsg);
         return (
             <div className="Login">
                 <header className='Login-header'>
@@ -39,6 +30,7 @@ export default class Login extends Component {
                     <h1>React管理系统</h1>
                 </header>
                 <section className='Login-content'>
+                    <div className={errorMsg ? 'error-msg': ''}>{errorMsg}</div>
                     <h2>用户登录</h2>
                     <Form
                         name="normal_login"
@@ -108,3 +100,8 @@ export default class Login extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    {loginAction}
+)(Login)
